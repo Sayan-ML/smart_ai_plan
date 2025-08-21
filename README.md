@@ -57,17 +57,17 @@ Deployed live using **Render** 🌐 with a beautiful frontend and a powerful Fas
 
 ---
 
-📜 License
+## 📜 License
 
 This project is licensed under the MIT License – you are free to use, modify, and distribute this software with proper attribution.
 See the LICENSE
  file for details.
 
-👨‍💻 Developers
+## 👨‍💻 Developers
 
 This backend system was collaboratively developed by:
 
-Sayan Banerjee
+### Sayan Banerjee
 
-Sujil
+### Sujil S
 
