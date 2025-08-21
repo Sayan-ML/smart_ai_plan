@@ -65,9 +65,10 @@ See the LICENSE
 
 ## 👨‍💻 Developers
 
-This backend system was collaboratively developed by:
+## 👨‍💻 Developers  
 
-### Sayan Banerjee
+This backend system was collaboratively developed by:  
+- [Sayan Banerjee](https://github.com/your-github-username)  
+- [Sujil S](https://github.com/sujil-github-username)  
 
-### Sujil S
 
