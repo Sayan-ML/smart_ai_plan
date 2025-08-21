@@ -63,8 +63,6 @@ This project is licensed under the MIT License – you are free to use, modify, 
 See the LICENSE
  file for details.
 
-## 👨‍💻 Developers
-
 ## 👨‍💻 Developers  
 
 This backend system was collaboratively developed by:  
