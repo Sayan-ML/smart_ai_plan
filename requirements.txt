@@ -1,0 +1,17 @@
+google-auth-oauthlib
+google-api-python-client
+google-auth
+requests
+pandas
+google-generativeai
+langchain-google-genai
+langchain
+markdown
+matplotlib
+numpy
+supabase
+reportlab
+yfinance
+flask
+python-dotenv
+plotly
