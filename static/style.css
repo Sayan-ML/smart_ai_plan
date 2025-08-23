@@ -1,0 +1,273 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+
+  background: linear-gradient(180deg, #6a11cb 0%, #2575fc 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.site-header {
+  text-align: center;
+  color: white;
+  margin-top: 40px;
+}
+
+.site-header h1 {
+  font-size: 2.5rem;
+  margin: 0;
+}
+
+.site-header .tagline {
+  font-size: 1.2rem;
+  margin-top: 8px;
+  font-weight: 300;
+}
+
+.container {
+  max-width: 400px;
+  width: 90%;
+  margin: 30px auto;
+  padding: 20px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.container form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;  
+}
+
+.container input[type="text"],
+.container input[type="email"],
+.container input[type="password"],
+.container button {
+  width: 100%;          
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+
+.container button {
+  background: linear-gradient(135deg, #6a11cb, #2575fc);
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.container button:hover {
+  opacity: 0.9;
+}
+
+.container p {
+  text-align: center;
+}
+
+.container p a {
+  display: inline-block;
+  margin: 5px;
+}
+
+.container h2,
+.container p,
+.container form {
+  text-align: center;
+}
+
+.container form button {
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+}
+
+h2 {
+  margin-bottom: 25px;
+  font-size: 28px;
+  font-weight: bold;
+  color: #222;
+}
+
+input {
+  width: 100%;
+  padding: 15px;
+  margin: 12px 0;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+  transition: 0.3s;
+}
+
+input:focus {
+  border-color: #2575fc;
+  box-shadow: 0 0 8px rgba(37, 117, 252, 0.4);
+  outline: none;
+}
+
+button {
+  width: 100%;
+  padding: 15px;
+  margin-top: 15px;
+  background: linear-gradient(135deg, #6a11cb, #2575fc);
+  border: none;
+  border-radius: 12px;
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(37,117,252,0.4);
+}
+
+p a {
+  color: #2575fc;
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.2s;
+}
+
+p a:hover {
+  color: #6a11cb;
+  text-decoration: underline;
+}
+
+.messages {
+  margin-bottom: 20px;
+}
+
+.msg {
+  padding: 12px;
+  border-radius: 10px;
+  font-size: 15px;
+  margin: 8px 0;
+}
+
+.msg.success { background: #d4edda; color: #155724; }
+.msg.danger { background: #f8d7da; color: #721c24; }
+.msg.info   { background: #cce5ff; color: #004085; }
+
+.dashboard-header {
+  text-align: center;
+  margin: 40px 0 20px;
+  color: white;
+}
+
+.dashboard-header h2 {
+  font-size: 3rem;     
+  color: white;        
+  font-weight: bold;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.dashboard-header .description {
+  font-size: 1.3rem;
+  color: #f1f1f1;     
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.widget-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 25px;
+  padding: 40px;
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.widget {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 170px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 15px;
+  text-decoration: none;
+  color: white;
+  backdrop-filter: blur(6px);
+  transition: transform 0.2s, box-shadow 0.2s;
+  text-align: center;
+  padding: 12px;
+}
+
+.widget .emoji {
+  font-size: 2.2rem;  
+  margin-bottom: 8px;
+}
+
+.widget .title {
+  font-size: 1.3rem;   
+  font-weight: bold;
+  margin-bottom: 6px;
+}
+
+.widget .desc {
+  font-size: 0.9rem;   
+  font-weight: normal;
+  color: #f1f1f1;
+}
+
+.widget:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+}
+
+.summary-box {
+  border-left: 4px solid #1a73e8;
+  padding: 10px;
+  background-color: #f1f8ff;
+  margin: 20px 0;
+  border-radius: 5px;
+}
+
+.email-card {
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 15px;
+  margin-bottom: 10px;
+  box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+  background-color: #f9f9f9;
+}
+
+.email-header {
+  font-weight: bold;
+  font-size: 16px;
+  color: #1a73e8;
+}
+
+.email-body {
+  margin-top: 5px;
+  color: #333;
+}
+
+.container textarea {
+  width: 100%;
+  max-width: 100%;
+  min-height: 160px;      
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 14px;
+  font-family: monospace; 
+  resize: vertical;       
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to   { opacity: 1; transform: scale(1); }
+}
