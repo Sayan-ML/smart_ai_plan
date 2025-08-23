@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="max-w-md mx-auto mt-12 bg-white shadow p-6 rounded-xl">
+  <h2 class="text-xl font-bold mb-4">🔑 Setup {{ service }} API Key</h2>
+  <form method="POST">
+    <label class="block mb-2">Google Gemini API Key</label>
+    <input type="text" name="{{ field_name }}" class="w-full border p-2 rounded mb-4" placeholder="Enter your Gemini API key">
+    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded w-full">Save Key</button>
+    <p class="text-gray-500 text-sm mt-3">
+      For Gemini API key visit 
+      <a href="https://aistudio.google.com/app/apikey" target="_blank" class="text-blue-600 underline">
+        https://aistudio.google.com/app/apikey
+      </a>
+    </p>
+  </form>
+</div>
+{% endblock %}

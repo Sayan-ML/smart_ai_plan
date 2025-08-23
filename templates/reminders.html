@@ -1,0 +1,179 @@
+{% extends "dashboard_base.html" %}
+{% block content %}
+
+<div class="text-center my-4 header-section">
+  <h2>📝 Add Task to Google Calendar</h2>
+  <p>Easily create reminders with date and time, synced directly to your Google Calendar.</p>
+</div>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        {% for category, message in messages %}
+          showPopup("{{ message }}", "{{ category }}");
+        {% endfor %}
+      });
+    </script>
+  {% endif %}
+{% endwith %}
+
+<div class="container wide-container">
+  <form method="POST" class="p-4 shadow rounded bg-light text-start" id="taskForm">
+
+    <div class="mb-3">
+      <label class="form-label form-label-lg">Task Title</label>
+      <input type="text" name="title" class="form-control big-input" placeholder="Enter task title" required>
+    </div>
+
+    <div class="mb-4">
+      <label class="form-label form-label-lg">Task Description</label>
+      <textarea name="description" class="form-control big-input" rows="6" placeholder="Enter task details"></textarea>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label form-label-lg">Date</label>
+      <input type="text" id="date" name="date" class="form-control big-input" placeholder="Select date" required>
+    </div>
+
+    <div class="time-row">
+      <div class="mb-3 flex-item">
+        <label class="form-label form-label-lg">Start Time</label>
+        <input type="text" id="start_time" name="start_time" class="form-control big-input" placeholder="Select start time" required>
+      </div>
+      <div class="mb-3 flex-item">
+        <label class="form-label form-label-lg">End Time</label>
+        <input type="text" id="end_time" name="end_time" class="form-control big-input" placeholder="Select end time" required>
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary btn-lg w-100">➕ Add Task</button>
+  </form>
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+<script>
+
+  flatpickr("#date", { dateFormat: "Y-m-d" });
+  flatpickr("#start_time", {
+    enableTime: true,
+    noCalendar: true,
+    dateFormat: "H:i",
+    time_24hr: true,
+    minuteIncrement: 1
+  });
+
+  flatpickr("#end_time", {
+    enableTime: true,
+    noCalendar: true,
+    dateFormat: "H:i",
+    time_24hr: true,
+    minuteIncrement: 1
+  });
+
+  document.getElementById("taskForm").addEventListener("submit", function(e) {
+    const start = document.getElementById("start_time").value;
+    const end = document.getElementById("end_time").value;
+
+    if (start && end) {
+      const startDate = new Date("1970-01-01 " + start);
+      const endDate = new Date("1970-01-01 " + end);
+
+      if (endDate <= startDate) {
+        e.preventDefault();
+        showPopup("❌ End time must be later than start time!", "error");
+      }
+    }
+  });
+
+  function showPopup(message, category) {
+    let popup = document.createElement("div");
+    popup.className = "popup-message " + category;
+    popup.innerText = message;
+    document.body.appendChild(popup);
+
+    setTimeout(() => popup.classList.add("show"), 100);
+    setTimeout(() => {
+      popup.classList.remove("show");
+      setTimeout(() => popup.remove(), 500);
+    }, 3000);
+  }
+</script>
+
+<style>
+
+  .wide-container {
+    max-width: 800px !important;
+    width: 100%;
+  }
+
+  .big-input {
+    font-size: 1.1rem;
+    padding: 14px;
+  }
+
+  .time-row {
+    display: flex;
+    gap: 20px;
+    justify-content: space-between;
+  }
+
+  .time-row .flex-item {
+    flex: 1;
+  }
+
+  .header-section h2 {
+    color: white !important;
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+
+  .header-section p {
+    color: white !important;
+    font-size: 1.2rem;
+    margin-bottom: 25px;
+    text-align: center;
+  }
+
+  .form-label-lg {
+    font-size: 1.1rem;
+    font-weight: 600;
+    background: linear-gradient(135deg, #6a11cb, #2575fc);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .popup-message {
+    position: fixed;
+    top: 20px;
+    right: -300px;
+    padding: 15px 20px;
+    border-radius: 8px;
+    color: white;
+    font-weight: 500;
+    z-index: 9999;
+    opacity: 0;
+    transition: all 0.5s ease;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  }
+
+  .popup-message.show {
+    right: 20px;
+    opacity: 1;
+  }
+
+  .popup-message.success {
+    background: linear-gradient(135deg, #28a745, #218838);
+  }
+
+  .popup-message.error, .popup-message.danger {
+    background: linear-gradient(135deg, #dc3545, #b02a37);
+  }
+
+</style>
+{% endblock %}

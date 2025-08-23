@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Movie Recommendations</title>
+  <style>
+  body {
+    min-height: 100vh; 
+    background: linear-gradient(to bottom, #3a0ca3, #7209b7, #f72585);
+    background-attachment: fixed; 
+    margin: 0;
+    padding: 20px;
+  }
+
+  h1 {
+    text-align: center;
+    font-size: 2.5rem;
+    margin-top: 30px;
+    color: white;
+  }
+
+  p.description {
+    text-align: center;
+    font-size: 1.2rem;
+    margin-bottom: 40px;
+    color: #ddd;
+  }
+
+  .filter-row {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 30px;
+  }
+
+  .filter-box {
+    flex: 1;
+    max-width: 300px;
+    background: #2b2d42; 
+    padding: 20px;
+    border-radius: 16px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    text-align: center;
+    color: white;
+  }
+
+    .filter-box label {
+    display: block;
+    font-size: 1.6rem; 
+    font-weight: 600;   
+    margin-bottom: 8px;  
+    color: #ffffff;    
+    text-align: center;
+  }
+
+  .filter-options {
+    margin-top: 15px;
+    text-align: left;
+  }
+
+  .filter-options select, 
+  .filter-options input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    text-align: center;
+    font-size: 1rem;
+    box-sizing: border-box;
+  }
+
+  button {
+    display: block;
+    margin: 0 auto 40px auto;
+    padding: 12px 24px;
+    font-size: 1rem;
+    background: #ff006e; 
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+
+  button:hover { background: #d90452; }
+
+  .movies-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 25px;
+  }
+
+  .movie-card {
+    background: #2b2d42; 
+    padding: 15px;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.3s;
+    color: white;
+  }
+
+  .movie-card:hover { 
+    transform: scale(1.05); 
+    box-shadow: 0 6px 18px rgba(0,0,0,0.5);
+  }
+
+  .movie-card img, 
+
+  .movie-card .placeholder {
+    width: 100%;
+    height: 270px;
+    border-radius: 12px;
+    object-fit: cover;
+    display: block;
+  }
+
+  .movie-poster-placeholder {
+    width: 100%;
+    height: 270px;
+    background: #a49d9d;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .placeholder {
+    background: #444;
+    color: #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: bold;
+  }
+
+  .movie-card h3 {
+    margin: 10px 0 5px;
+    font-size: 16px;
+    color: #fff;
+  }
+</style>
+
+</head>
+<body>
+  <h1>🎬 Movie Recommendations</h1>
+  <p class="description">Discover curated movie picks based on your favorite genre, release year, and language.</p>
+
+  <div class="filter-row">
+    <div class="filter-box">
+      <label for="genre">Genre</label>
+      <div class="filter-options" id="genreOptions">
+        <select id="genre"></select>
+      </div>
+    </div>
+
+    <div class="filter-box">
+      <label for="year">Year</label>
+      <div class="filter-options" id="yearOptions">
+        <input type="number" id="year" min="1900" max="2025" placeholder="Enter year">
+      </div>
+    </div>
+
+    <div class="filter-box">
+      <label for="language">Language</label>
+      <div class="filter-options" id="languageOptions">
+        <select id="language">
+          <option value="en">Hollywood (English)</option>
+          <option value="hi">Bollywood (Hindi)</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <button id="getMovies">Get Recommendations</button>
+
+  <div class="movies-grid" id="movies"></div>
+
+  <script>
+    async function loadGenres() {
+      const res = await fetch("/api/movies/genres");
+      const data = await res.json();
+      const select = document.getElementById("genre");
+
+      data.forEach(g => {
+        const opt = document.createElement("option");
+        opt.value = g.id;
+        opt.textContent = g.name;
+        select.appendChild(opt);
+      });
+    }
+
+    document.getElementById("getMovies").addEventListener("click", async () => {
+      const genre = document.getElementById("genre").value;
+      const year = document.getElementById("year").value;
+      const lang = document.getElementById("language").value;
+
+      const res = await fetch("/api/movies", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ genre: genre ? [genre] : [], year, language: lang, num_movies: 20 })
+      });
+
+      const movies = await res.json();
+      const grid = document.getElementById("movies");
+      grid.innerHTML = "";
+
+      if (movies.length === 0) {
+        grid.innerHTML = "<p>No movies found. Try different filters.</p>";
+        return;
+      }
+
+      movies.forEach(m => {
+        const card = document.createElement("div");
+        card.className = "movie-card";
+
+        if (m.poster_path) {
+          card.innerHTML = `
+            <img src="https://image.tmdb.org/t/p/w200${m.poster_path}" alt="Poster">
+            <h3>${m.title}</h3>
+          `;
+        } else {
+          card.innerHTML = `
+            <div class="movie-poster-placeholder">Poster Not Available</div>
+            <h3>${m.title}</h3>
+          `;
+        }
+
+        card.onclick = () => window.open(`https://www.themoviedb.org/movie/${m.id}`, "_blank");
+        grid.appendChild(card);
+      });
+    });
+
+    loadGenres();
+  </script>
+</body>
+</html>

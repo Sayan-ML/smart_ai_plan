@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Email Assistant</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      text-align: center;
+      min-height: 100vh;
+      background: linear-gradient(180deg, #a8cfff 0%, #e6f3ff 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      overflow-x: hidden; 
+    }
+
+    h1 {
+      margin: 20px 0 10px 0;
+      font-size: 48px;
+      font-weight: bold;
+    }
+
+    .gradient-text {
+      background: linear-gradient(135deg, #6a11cb, #2575fc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .subtitle {
+      font-size: 18px;
+      color: #334e68;
+      margin-bottom: 25px;
+      max-width: 70%;
+      line-height: 1.4;
+    }
+
+    button {
+      background: linear-gradient(135deg, #6a11cb, #2575fc);
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    }
+
+    .summary-box {
+      width: 80%;
+      margin: 20px auto;
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      text-align: left;
+    }
+
+    .search-box {
+      width: 70%;
+      margin: 20px auto;
+      padding: 12px;
+      font-size: 16px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+    }
+
+    #emails-list {
+      width: min(1100px, 95%); 
+    }
+
+    .email-card {
+      width: 100%;
+      margin: 15px auto;
+      background: white;
+      border-radius: 12px;
+      padding: 15px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      text-align: left;
+      cursor: pointer;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      box-sizing: border-box;
+    }
+
+    .email-body {
+      display: none;
+      margin-top: 10px;
+      color: #333;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere; 
+      word-break: break-word;
+      max-height: 250px;     
+      overflow-y: auto;       
+      overflow-x: auto;        
+      padding: 10px;
+      border-top: 1px solid #eee;
+    }
+
+    .email-body img { max-width: 100%; height: auto; }
+    .email-body table { display: block; max-width: 100%; overflow-x: auto; }
+    .email-body pre, .email-body code { white-space: pre-wrap; word-break: break-word; }
+
+    .card-footer {
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    .replies-section {
+      width: 80%;
+      margin: 30px auto;
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      text-align: center;
+    }
+
+    .reply-option {
+      background: rgba(255,255,255,0.85);
+      border-radius: 12px;
+      padding: 15px;
+      margin: 12px 0;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+      text-align: left;
+    }
+
+    .reply-option:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 15px rgba(0,0,0,0.25);
+    }
+
+    .reply-option.selected {
+      background: linear-gradient(135deg, #6a11cb, #2575fc);
+      color: white;
+    }
+
+    textarea {
+      width: 100%;
+      margin-top: 20px;
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      font-size: 15px;
+      box-sizing: border-box;
+    }
+
+    textarea,
+    .search-box,
+    .summary-box,
+    .email-card,
+    .replies-section,
+    .reply-option {
+      border: 2px solid transparent;
+      background-image: linear-gradient(white, white), linear-gradient(135deg, #6a11cb, #2575fc);
+      background-origin: border-box;
+      background-clip: padding-box, border-box;
+    }
+  </style>
+</head>
+<body>
+  <h1>
+    📧 <span class="gradient-text">Email Assistant</span> 📧
+  </h1>
+  <p class="subtitle">
+    Summarize your inbox, search emails, and generate smart reply suggestions instantly — all in one place.
+  </p>
+  <button style="width:30%" onclick="summarizeInbox()">Summarize Inbox</button>
+
+  <div id="summary-box" class="summary-box" style="display:none;"></div>
+  <input type="text" id="search-box" class="search-box" style="display:none;" placeholder="🔍 Search by sender or subject...">
+  <div id="emails-list"></div>
+  <div id="replies-section" class="replies-section" style="display:none;"></div>
+
+  <script>
+    let emails = [];
+    let selectedReply = null;
+
+    function escapeHtml(s) {
+      return (s || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+
+    function summarizeInbox() {
+      document.getElementById("summary-box").style.display = "block";
+      document.getElementById("summary-box").innerHTML = "<p>Loading summary...</p>";
+      fetch("/api/summarize_emails")
+        .then(res => res.json())
+        .then(data => {
+          if (data.error) {
+            document.getElementById("summary-box").innerHTML = "<p style='color:red'>" + data.error + "</p>";
+            return;
+          }
+          let formatted = data.summary.replace(/\*\*/g, "<b>").replace(/\*/g, "•");
+          document.getElementById("summary-box").innerHTML = "<h3>Inbox Summary</h3>" + formatted;
+          emails = data.emails;
+          document.getElementById("search-box").style.display = "block";
+          renderEmails(emails);
+        });
+    }
+
+    function renderEmails(list) {
+      let container = document.getElementById("emails-list");
+      container.innerHTML = "";
+
+      list.forEach((email) => {
+        let card = document.createElement("div");
+        card.className = "email-card";
+
+        card.innerHTML = `
+          <strong>From:</strong> ${escapeHtml(email.from)}<br>
+          <strong>Subject:</strong> ${escapeHtml(email.subject)}
+          <div class="email-body" style="display:none;"></div>
+        `;
+
+        const bodyDiv = card.querySelector(".email-body");
+        bodyDiv.textContent = email.body || ""; 
+
+        let footer = document.createElement("div");
+        footer.className = "card-footer";
+
+        let replyBtn = document.createElement("button");
+        replyBtn.innerText = "Generate 3 Replies";
+        replyBtn.onclick = function(e) {
+          e.stopPropagation();
+          generateReplies(email);
+        };
+        footer.appendChild(replyBtn);
+        card.appendChild(footer);
+
+        card.addEventListener("click", () => {
+          bodyDiv.style.display = bodyDiv.style.display === "none" ? "block" : "none";
+        });
+
+        container.appendChild(card);
+      });
+    }
+
+    document.getElementById("search-box").addEventListener("input", function() {
+      let q = this.value.toLowerCase().trim();
+      if (!q) {
+        renderEmails(emails);
+      } else {
+        let filtered = emails.filter(e =>
+          e.from.toLowerCase().includes(q) ||
+          e.subject.toLowerCase().includes(q)
+        );
+        renderEmails(filtered);
+      }
+    });
+
+    function generateReplies(email) {
+      fetch("/api/generate_replies", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ body: email.body })
+      })
+      .then(res => res.json())
+      .then(data => {
+        let section = document.getElementById("replies-section");
+        section.style.display = "block";
+        section.innerHTML = "<h3>Choose a Reply</h3>";
+
+        selectedReply = null;
+
+        data.replies.forEach((r) => {
+          let div = document.createElement("div");
+          div.className = "reply-option";
+          div.innerText = r;
+          div.onclick = function() {
+            document.querySelectorAll(".reply-option").forEach(el => el.classList.remove("selected"));
+            div.classList.add("selected");
+            selectedReply = r;
+          };
+          section.appendChild(div);
+        });
+
+        let textarea = document.createElement("textarea");
+        textarea.id = "custom-reply";
+        textarea.rows = 5;
+        textarea.placeholder = "Or write your own reply";
+        section.appendChild(textarea);
+
+        let sendBtn = document.createElement("button");
+        sendBtn.style.marginTop = "15px";
+        sendBtn.innerText = "Send Email";
+        sendBtn.onclick = function() {
+          sendEmail(email);
+        };
+        section.appendChild(sendBtn);
+
+        section.scrollIntoView({ behavior: "smooth" });
+      });
+    }
+
+    function sendEmail(email) {
+      let reply = selectedReply || document.getElementById("custom-reply").value.trim();
+      if (!reply) {
+        alert("Please select or write a reply before sending.");
+        return;
+      }
+      fetch("/api/send_email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          to: email.from,
+          subject: "Re: " + email.subject,
+          body: reply
+        })
+      })
+      .then(res => res.json())
+      .then(data => {
+        alert(data.message);
+      });
+    }
+  </script>
+</body>
+</html>

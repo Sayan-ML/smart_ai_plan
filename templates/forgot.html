@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>🔑 Reset Password</h2>
+<form method="POST">
+  <input type="email" name="email" placeholder="Enter registered email" required>
+  <input type="password" name="new_password" placeholder="Enter new password" required>
+  <button type="submit">Reset Password</button>
+</form>
+<p><a href="{{ url_for('login') }}">🔐 Back to Login</a></p>
+{% endblock %}

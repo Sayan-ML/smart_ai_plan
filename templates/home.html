@@ -1,0 +1,1067 @@
+{% extends "dashboard_base.html" %}
+
+{% block content %}
+  <div class="dashboard-header">
+    <h2>✨ Welcome to your Smart AI Daily Planner ✨</h2>
+    <p class="description">
+      Your intelligent assistant to plan, organize, and stay ahead every day 🚀
+    </p>
+  </div>
+
+  <div class="widget-grid">
+    <a href="#" class="widget" id="weatherWidget">
+      <span class="emoji">⛅</span>
+      <span class="title">Weather</span>
+      <span class="desc">Get today’s forecast</span>
+    </a>
+
+    <a href="#" class="widget" id="stocksCryptoWidget" onclick="return false;">
+      <span class="emoji">📈</span>
+      <span class="title">Stocks & Crypto</span>
+      <span class="desc">Track latest market prices</span>
+    </a>
+
+    <a href="#" class="widget" id="horoscopeWidget">
+      <span class="emoji">🔮</span>
+      <span class="title">Horoscope</span>
+      <span class="desc">Your daily zodiac insights</span>
+    </a>
+
+    <a href="{{ url_for('email_ai') }}" class="widget">
+      <span class="emoji">📧</span>
+      <span class="title">Email Assistant</span>
+      <span class="desc">Read & send personalized emails</span>
+    </a>
+
+    <a href="{{ url_for('reminders') }}" class="widget">
+      <span class="emoji">⏰</span>
+      <span class="title">Reminders & To-Do</span>
+      <span class="desc">Stay on top of tasks</span>
+    </a>
+
+    <a href="{{ url_for('news') }}" class="widget">
+      <span class="emoji">📰</span>
+      <span class="title">News</span>
+      <span class="desc">Daily headlines & summaries</span>
+    </a>
+
+    <a href="{{ url_for('expenses') }}" class="widget">
+      <span class="emoji">💰</span>
+      <span class="title">Expense Tracker</span>
+      <span class="desc">Manage your daily spending</span>
+    </a>
+
+    <a href="{{ url_for('movies') }}" class="widget">
+      <span class="emoji">🎬</span>
+      <span class="title">Movies</span>
+      <span class="desc">Personalized recommendations</span>
+    </a>
+
+    <a href="{{ url_for('travel') }}" class="widget">
+      <span class="emoji">🌍</span>
+      <span class="title">Travel Planner</span>
+      <span class="desc">Discover nearby places</span>
+    </a>
+  </div>
+
+  <button id="sidebarToggle" class="sidebar-btn">☰</button>
+
+  <div id="sidebar" class="sidebar hidden">
+    <div class="sidebar-header">
+      <h2>Update the Existing Information</h2>
+      <span id="closeSidebar" class="news-close-btn">&times;</span>
+    </div>
+    <div class="sidebar-body">
+      <button class="field-btn" data-field="google_gemini_api_key">Gemini API key</button>
+      <button class="field-btn" data-field="client_secret_json">Client Secret Json</button>
+      <button class="field-btn" data-field="weather_api">Weather API</button>
+      <button class="field-btn" data-field="tmdb_api">TMDB API</button>
+      <button class="field-btn" data-field="news_api">News API</button>
+      <button class="field-btn" data-field="google_map_api">Google Map API</button>
+      <button class="field-btn" data-field="zodiac_sign">Zodiac Sign</button>
+    </div>
+  </div>
+
+  <div id="sidebarFieldPopup" class="sidebar-popup hidden">
+    <div class="sidebar-popup-content">
+      <span id="sidebarClosePopup" class="sidebar-popup-close">&times;</span>
+      <h3 id="sidebarPopupTitle" style="text-align:center;"></h3>
+      <div id="sidebarPopupBody" class="sidebar-popup-inner"></div>
+    </div>
+  </div>
+
+  <div id="weatherPopup" class="popup hidden">
+    <div class="popup-content">
+      <span class="close-btn" id="closePopup">&times;</span>
+      <div id="weatherContent">Loading...</div>
+    </div>
+  </div>
+
+  <div id="horoscopePopup" class="popup hidden">
+    <div class="popup-content">
+      <span class="close-btn" id="closeHoroscopePopup">&times;</span>
+      <div id="horoscopeContent">⏳ Loading...</div>
+    </div>
+  </div>
+
+  <div id="stocksCryptoPopup" class="stocks-popup hidden">
+    <div class="stocks-popup-content">
+      <span class="stocks-close-btn" id="closeStocksPopup">&times;</span>
+      <h2>📊 About what you need the information</h2>
+      <div class="stocks-choice-row">
+        <a href="{{ url_for('stocks') }}" class="stocks-choice-btn">Stocks</a>
+        <a href="{{ url_for('crypto') }}" class="stocks-choice-btn">Crypto</a>
+      </div>
+    </div>
+  </div>
+
+  <div id="expensePopup" class="expense-popup hidden">
+    <div class="expense-popup-content">
+      <span class="expense-close-btn" id="closeExpensePopup">&times;</span>
+      <h2>💰 How can I help you?</h2>
+      <div class="expense-choice-row">
+        <button class="expense-choice-btn" id="addExpenseBtn">Add Expense</button>
+        <button class="expense-choice-btn" id="getExpenseBtn">Get Total Expense</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="expenseSecondPopup" class="expense-popup hidden">
+    <div class="expense-popup-content">
+      <span class="expense-close-btn" id="closeExpenseSecondPopup">&times;</span>
+      <div id="expenseSecondContent">Loading...</div>
+    </div>
+  </div>
+
+  <style>
+
+    #weatherPopup h3 {
+      font-size: 1.8rem;  
+      font-weight: bold;
+      text-align: center; 
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    #weatherPopup .api-form {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+      padding: 0 5px; 
+      box-sizing: border-box;
+    }
+
+    #weatherPopup .api-form input {
+      width: 100%;        
+      max-width: 420px;  
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 15px;
+      box-sizing: border-box;
+    }
+
+    #weatherPopup .api-form button {
+      background: #6d28d9;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 10px 18px;
+      cursor: pointer;
+      font-size: 15px;
+      margin-top: 10px;
+      width: auto;       
+      min-width: 100px;  
+      align-self: center; 
+    }
+
+    #weatherPopup .api-form button:hover {
+      background: #4c1d95;
+    }
+
+    .stocks-popup {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1100;
+    }
+    .stocks-popup.hidden { display: none; }
+
+    .stocks-popup-content {
+      background: linear-gradient(to bottom, #fff3e0, #ffffff);
+      padding: 30px;
+      border-radius: 16px;
+      width: 480px;
+      max-width: 90%;
+      text-align: center;
+      box-shadow: 0 8px 28px rgba(0,0,0,0.3);
+      border: 2px solid #ff9800;
+    }
+    
+    .stocks-close-btn {
+      float: right;
+      cursor: pointer;
+      font-size: 22px;
+      color: #e65100;
+    }
+
+    .stocks-choice-row {
+      display: flex;
+      justify-content: center;
+      gap: 25px;
+      margin-top: 25px;
+    }
+
+    .stocks-choice-btn {
+      padding: 12px 26px;
+      background: #ff9800;
+      color: white;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: background 0.3s;
+    }
+
+    .stocks-choice-btn:hover {
+      background: #e65100;
+    }
+
+    .popup {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .popup.hidden { display: none; }
+
+    .popup-content {
+      background: linear-gradient(to bottom, #e3f2fd, #ffffff); 
+      padding: 25px;
+      border-radius: 14px;
+      width: 700px;  
+      max-width: 95%;
+      box-shadow: 0 6px 25px rgba(0,0,0,0.25);
+    }
+
+    .close-btn {
+      float: right;
+      cursor: pointer;
+      font-size: 22px;
+    }
+
+    .weather-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      margin: 20px 0;
+    }
+
+    .weather-row {
+      display: flex;
+      justify-content: center; 
+      gap: 50px;
+      margin-top: 20px;
+    }
+
+    .weather-item {
+      background: #f8f9fa;
+      padding: 15px 20px;
+      border-radius: 12px;
+      text-align: center;
+    }
+
+    .weather-item .label {
+      font-size: 20px;  
+      font-weight: bold;
+    }
+
+    .weather-item .value {
+      font-size: 15px;  
+      color: #444;
+      margin-top: 6px;
+    }
+
+    .advice-heading {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+    
+    .advice-list {
+      margin-left: 18px;
+    }
+
+    .weather-title {
+      text-align: center;
+      font-size: 32px;
+      font-weight: bold;
+      margin-bottom: 25px;
+      color: #2c3e50;  
+    }
+
+    .expense-popup {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1200;
+    }
+
+    .expense-popup.hidden { display: none; }
+
+    .expense-popup-content {
+      background: linear-gradient(to bottom, #c8e6c9, #e8f5e9, #ffffff); 
+      padding: 30px;
+      border-radius: 16px;
+      width: 420px;
+      max-width: 90%;
+      text-align: center;
+      box-shadow: 0 8px 28px rgba(0,0,0,0.3);
+      border: 2px solid #4caf50;
+    }
+
+    .category-btn.selected {
+      background: #65f405 !important;  
+      color: #fff;
+      box-shadow: 0 0 6px rgba(0,0,0,0.3);
+    }
+
+    .expense-close-btn {
+      float: right;
+      cursor: pointer;
+      font-size: 22px;
+      color: #2e7d32;
+    }
+
+    .expense-choice-row {
+      display: flex;
+      justify-content: center;
+      gap: 25px;
+      margin-top: 25px;
+    }
+
+    .expense-choice-btn {
+      padding: 12px 20px;
+      background: #42e748;
+      color: white;
+      border-radius: 10px;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .expense-choice-btn:hover {
+      background: #207625;
+    }
+
+    .category-btn {
+      padding: 12px;
+      background: #013a03;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      text-align: center;
+      transition: background 0.2s;
+    }
+
+    .category-btn:hover {
+      background: #3e7741;
+    }
+
+    .expense-report-title {
+      text-align: center;
+      font-size: 1.8rem;
+      margin-bottom: 20px;
+    }
+
+    .expense-report-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;   
+      gap: 20px;             
+    }
+
+    .expense-report-container label {
+      display: flex;
+      flex-direction: column;
+      align-items: center;  
+      font-weight: 600;
+      font-size: 1.1rem;     
+    }
+
+    .expense-report-container input[type="date"] {
+      padding: 12px 16px;     
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      text-align: center;
+      font-size: 1.05rem;     
+      width: 280px;           
+    }
+
+    .expense-report-btn {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background: #2e7d32;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .expense-report-btn:hover {
+      background: #1b5e20;
+    }
+
+    #horoscopeContent {
+      width: 100%;
+      max-width: 500px;     
+      padding: 25px;        
+      box-sizing: border-box;
+      margin: 0 auto;     
+    }
+
+    .horoscope-form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin-top: 15px;
+      align-items: center;  
+      width: 100%;
+    }
+
+    .input-label {
+      font-size: 16px;      
+      font-weight: 700;
+      color: #222;
+      align-self: flex-start; 
+    }
+
+    .horoscope-input, 
+    .horoscope-select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #bbb;
+      border-radius: 8px;
+      font-size: 15px;
+      outline: none;
+      transition: border 0.2s ease;
+    }
+
+    .horoscope-input:focus, 
+    .horoscope-select:focus {
+      border-color: #6a5acd;
+    }
+
+    .horoscope-btn {
+      background: linear-gradient(90deg, #6a5acd, #836fff);
+      color: white;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 15px;
+      width: 100%;
+      transition: background 0.3s ease;
+      margin-top: 10px;
+    }
+
+    .horoscope-btn:hover {
+      background: linear-gradient(90deg, #5946d2, #715aff);
+    }
+
+    .popup-heading {
+      text-align: center;
+      font-size: 26px;      
+      font-weight: 800;
+      margin-bottom: 25px;
+      color: #111;
+    }
+
+    .sidebar {
+      position: fixed;
+      top: 0; left: 0;
+      width: 300px;
+      height: 100%;
+      background: linear-gradient(to bottom, #7669b0 0%, #695bb2 50%, #a55aef 100%);
+      box-shadow: 2px 0 8px rgba(0,0,0,0.2);
+      transform: translateX(-100%);
+      transition: transform 0.3s ease;
+      z-index: 1500;
+      padding: 20px;
+    }
+
+    .sidebar.show { transform: translateX(0); }
+
+    .sidebar-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;  
+      }
+
+      .sidebar-header h2 {
+        margin-top: 50px;     
+        color: #ffffff;        
+        font-weight: bold;    
+      }
+
+      .sidebar-header .news-close-btn {
+        margin-top: -6px; 
+      }
+
+    .sidebar-btn {
+      position: fixed;
+      top: 15px; left: 15px;
+      background: #6d28d9; 
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 8px 12px;
+      cursor: pointer;
+      font-size: 18px;
+      z-index: 1600;
+      width: auto; 
+    }
+
+    .sidebar-btn.hidden { display: none; }
+
+    .news-close-btn {
+      font-size: 24px;
+      font-weight: bold;
+      color: #6d28d9; 
+      cursor: pointer;
+      background: #f3e8ff; 
+      border: 2px solid #6d28d9;
+      border-radius: 50%;
+      padding: 4px 10px;
+      line-height: 1;
+      transition: all 0.3s ease;
+    }
+
+    .news-close-btn:hover {
+      background: #6d28d9;
+      color: #fff;
+      transform: scale(1.1);
+    }
+
+    .field-btn {
+      width: 100%;
+      padding: 10px;
+      margin: 6px 0;
+      border: 1px solid #0756f5;
+      border-radius: 6px;
+      background: #6d28d9;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    .field-btn:hover { background: #2b5dff; }
+
+    .sidebar-popup {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .sidebar-popup-content {
+      background: linear-gradient(to bottom, #7669b0 0%, #695bb2 50%, #a55aef 100%);
+      padding: 20px;
+      border-radius: 20px 20px 20px 20px;
+      width: 400px;
+      max-width: 90%;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+      position: relative;
+    }
+
+    .sidebar-popup-inner input,
+    .sidebar-popup-inner textarea,
+    .sidebar-popup-inner select {
+      width: 90%;           
+      max-width: 350px;      
+      padding: 10px;
+      margin: 10px auto;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      font-size: 14px;
+      color: #111827;
+      background: #ffffff;
+      display: block;         
+    }
+    
+    .sidebar-popup.hidden { display: none; }
+    
+    .sidebar-popup-content button {
+      background: #6d28d9;  
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 10px 20px;     
+      cursor: pointer;
+      margin: 15px auto 0;    
+      display: block;        
+      width: auto;            
+      min-width: 100px;      
+      text-align: center;
+    }
+
+    .sidebar-popup-inner button {
+      background: #6d28d9;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 10px;
+      cursor: pointer;
+      margin-top: 15px;
+    }
+
+    .sidebar-popup-inner button:hover {
+      background: #218cb6;
+    }
+
+    .sidebar-popup-content button:hover {
+      background: #218cb6;
+    }
+
+    .sidebar-popup-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;   
+      justify-content: center;
+      margin-top: 30px;    
+    }
+
+    .sidebar-popup-close {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        cursor: pointer;
+        font-size: 22px;
+      }
+
+  </style>
+
+  <script>
+    document.getElementById("weatherWidget").addEventListener("click", async function(e) {
+      e.preventDefault();
+      const popup = document.getElementById("weatherPopup");
+      const content = document.getElementById("weatherContent");
+      popup.classList.remove("hidden");
+      content.innerHTML = "⏳ Loading...";
+
+      let resp = await fetch("/weather");
+      let data = await resp.json();
+
+      if (data.need_api) {
+        content.innerHTML = `
+          <h3>🔑 Enter API Keys</h3>
+          <form id="apiForm" class="api-form">
+            ${data.missing.includes("weather_api") ? '<input type="text" name="weather_api" placeholder="Weather API Key" required>' : ''}
+            ${data.missing.includes("google_gemini_api_key") ? '<input type="text" name="google_gemini_api_key" placeholder="Gemini API Key" required>' : ''}
+            <button type="submit">Save</button>
+          </form>
+
+          <div style="margin-top:15px; font-size:14px; line-height:1.6; color:#333; text-align:center;">
+            <p>🔑 For Gemini API key visit: 
+              <a href="https://aistudio.google.com/app/apikey" target="_blank" style="color:#1d4ed8; text-decoration:underline;">
+                https://aistudio.google.com/app/apikey
+              </a>
+            </p>
+            <p>🔑 For Weather API key visit: 
+              <a href="https://home.openweathermap.org/api_keys" target="_blank" style="color:#1d4ed8; text-decoration:underline;">
+                https://home.openweathermap.org/api_keys
+              </a>
+            </p>
+          </div>
+        `;
+
+        document.getElementById("apiForm").addEventListener("submit", async function(ev) {
+          ev.preventDefault();
+          const formData = new FormData(ev.target);
+          const payload = {};
+          formData.forEach((v,k) => payload[k] = v);
+          await fetch("/weather", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+          });
+          location.reload();
+        });
+      } else if (data.weather) {
+        let adviceHeading = "";
+        let adviceHtml = "";
+        if (Array.isArray(data.advice)) {
+          adviceHtml = data.advice.map(a => `<li>${a}</li>`).join("");
+        } else if (typeof data.advice === "string") {
+          let lines = data.advice.split("\n").filter(line => line.trim());
+          if (lines.length > 0) {
+            adviceHeading = lines[0].replace(/^-/, "").trim();
+            adviceHtml = lines.slice(1).map(line => `<li>${line.replace(/^-/, "").trim()}</li>`).join("");
+          }
+        }
+
+        content.innerHTML = `
+          <h2 class="weather-title">🌤 Weather for ${data.weather.city}</h2>
+          <div class="weather-grid">
+            <div class="weather-item">
+              <div class="label">🌡 Temp</div>
+              <div class="value">${data.weather.temp}°C</div>
+            </div>
+            <div class="weather-item">
+              <div class="label">🤔 Feels Like</div>
+              <div class="value">${data.weather.feels_like}°C</div>
+            </div>
+            <div class="weather-item">
+              <div class="label">💧 Humidity</div>
+              <div class="value">${data.weather.humidity}%</div>
+            </div>
+            <div class="weather-item">
+              <div class="label">📊 Pressure</div>
+              <div class="value">${data.weather.pressure} hPa</div>
+            </div>
+            <div class="weather-item">
+              <div class="label">☁️ Condition</div>
+              <div class="value">${data.weather.condition}</div>
+            </div>
+            <div class="weather-item">
+              <div class="label">💨 Wind</div>
+              <div class="value">${data.weather.wind_speed} m/s</div>
+            </div>
+          </div>
+
+          <div class="weather-row">
+            <div class="weather-item">
+              <div class="label">🌅 Sunrise</div>
+              <div class="value">${new Date(data.weather.sunrise * 1000).toLocaleTimeString()}</div>
+            </div>
+            <div class="weather-item">
+              <div class="label">🌇 Sunset</div>
+              <div class="value">${new Date(data.weather.sunset * 1000).toLocaleTimeString()}</div>
+            </div>
+          </div>
+
+          <hr>
+          <div class="advice-heading">💡 ${adviceHeading || "Suggestions"}</div>
+          <ul class="advice-list">${adviceHtml}</ul>
+        `;
+      } else {
+        content.innerHTML = "⚠️ Error fetching weather.";
+      }
+    });
+
+    document.getElementById("closePopup").addEventListener("click", function() {
+      document.getElementById("weatherPopup").classList.add("hidden");
+    });
+
+    document.getElementById("stocksCryptoWidget").addEventListener("click", function(e) {
+      e.preventDefault(); 
+      document.getElementById("stocksCryptoPopup").classList.remove("hidden");
+    });
+
+    document.getElementById("closeStocksPopup").addEventListener("click", function() {
+      document.getElementById("stocksCryptoPopup").classList.add("hidden");
+    });
+
+    document.querySelector('a[href="{{ url_for("expenses") }}"]').addEventListener("click", function(e) {
+      e.preventDefault();
+      document.getElementById("expensePopup").classList.remove("hidden");
+    });
+
+    document.getElementById("closeExpensePopup").addEventListener("click", function() {
+      document.getElementById("expensePopup").classList.add("hidden");
+    });
+
+
+
+    document.getElementById("addExpenseBtn").addEventListener("click", function() {
+      document.getElementById("expensePopup").classList.add("hidden");
+      const secondPopup = document.getElementById("expenseSecondPopup");
+
+      const categories = [
+        "Housing", "Food & Groceries", "Transportation", "Healthcare", "Debt Payments", "Savings & Investments",
+        "Insurance", "Entertainment", "Shopping", "Education", "Personal Care", "Miscellaneous"
+      ];
+
+      let html = `<h2>📂 Categories</h2>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px;margin:20px 0;">`;
+
+      categories.forEach((cat, i) => {
+        html += `<button class="category-btn" data-cat="${cat}" 
+                   style="padding:10px;background:#4caf50;color:white;border:none;border-radius:8px;cursor:pointer;">
+                   ${cat}
+                 </button>`;
+      });
+
+      html += `</div>
+        <div id="expenseInputRow" style="margin-top:20px;display:none;text-align:center;">
+          <input type="number" step="0.01" id="expenseAmount" placeholder="Enter amount" 
+                style="padding:12px;width:80%;max-width:380px;
+                      border:1px solid #ccc;border-radius:6px;
+                      font-size:1rem;display:block;margin:0 auto 12px;">
+          <button id="finalAddExpense" 
+                    style="width:120px;height:40px;
+                          background:#2e7d32;color:white;
+                          border:none;border-radius:6px;
+                          cursor:pointer;font-size:1rem;
+                          font-weight:bold;
+                          display:flex;align-items:center;justify-content:center;
+                          margin:0 auto;">
+              ADD
+            </button>
+          <div id="expenseMsg" style="margin-top:12px;color:#2e7d32;font-weight:bold;"></div>
+        </div>
+      `;
+
+      document.getElementById("expenseSecondContent").innerHTML = html;
+      secondPopup.classList.remove("hidden");
+
+      let selectedCategory = null;
+
+      document.querySelectorAll(".category-btn").forEach(btn => {
+        btn.addEventListener("click", function() {
+          document.querySelectorAll(".category-btn").forEach(b => b.classList.remove("selected"));
+          this.classList.add("selected");
+          selectedCategory = this.dataset.cat;
+          document.getElementById("expenseInputRow").style.display = "block";
+          document.getElementById("expenseMsg").innerText = `Selected: ${selectedCategory}`;
+        });
+      });
+
+      document.getElementById("finalAddExpense").addEventListener("click", async function() {
+        const amount = parseFloat(document.getElementById("expenseAmount").value);
+
+        if (!selectedCategory) {
+          document.getElementById("expenseMsg").innerText = "⚠️ Please select a category.";
+          return;
+        }
+
+        if (isNaN(amount) || amount <= 0) {
+          document.getElementById("expenseMsg").innerText = "⚠️ Please enter a valid positive amount.";
+          return;
+        }
+
+        let resp = await fetch("/add_expense", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ category: selectedCategory, amount })
+        });
+
+        let data = await resp.json();
+        if (data.success) {
+          document.getElementById("expenseMsg").innerText = "✅ Expense added successfully!";
+          document.getElementById("expenseAmount").value = "";
+        } else {
+          document.getElementById("expenseMsg").innerText = "⚠️ Error: " + (data.error || "Try again.");
+        }
+      });
+    });
+
+    document.getElementById("getExpenseBtn").addEventListener("click", async function() {
+      let resp = await fetch("/get_expense_date_range");
+      let data = await resp.json();
+
+      document.getElementById("expensePopup").classList.add("hidden");
+      const secondPopup = document.getElementById("expenseSecondPopup");
+
+      if (data.exists) {
+        document.getElementById("expenseSecondContent").innerHTML = `
+          <h3 class="expense-report-title">📊 Get your Expenses Report</h3>
+          <div class="expense-report-container">
+            <label>
+              Start Date:<br>
+              <input type="date" id="startDate" min="${data.min_date}" max="${data.max_date}" value="${data.min_date}">
+            </label>
+
+            <label>
+              End Date:<br>
+              <input type="date" id="endDate" min="${data.min_date}" max="${data.max_date}" value="${data.max_date}">
+            </label>
+
+            <button id="sendReportBtn" class="expense-report-btn">Send Report</button>
+          </div>
+        `;
+
+        document.getElementById("sendReportBtn").addEventListener("click", async function() {
+          const startDate = document.getElementById("startDate").value;
+          const endDate = document.getElementById("endDate").value;
+
+          let resp = await fetch("/generate_expense_report", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ from_date: startDate, end_date: endDate })
+          });
+
+          let result = await resp.json();
+          alert(result.message || result.error);
+        });
+      } else {
+        document.getElementById("expenseSecondContent").innerHTML = "<h3>⚠️ No expense record found for this user</h3>";
+      }
+      secondPopup.classList.remove("hidden");
+    });
+    document.getElementById("closeExpenseSecondPopup").addEventListener("click", function() {
+      document.getElementById("expenseSecondPopup").classList.add("hidden");
+    });
+
+    document.getElementById("horoscopeWidget").addEventListener("click", async function(e) {
+      e.preventDefault();
+      const popup = document.getElementById("horoscopePopup");
+      const content = document.getElementById("horoscopeContent");
+      popup.classList.remove("hidden");
+      content.innerHTML = "⏳ Loading...";
+
+      let resp = await fetch("/horoscope");
+      let data = await resp.json();
+
+      if (data.need_api) {
+        let formHtml = `
+          <div class="popup-header">
+            <h3 class="popup-heading">🔑 Setup Horoscope</h3>
+          </div>
+          <form id="horoscopeForm" class="horoscope-form">
+        `;
+
+        if (data.missing.includes("google_gemini_api_key")) {
+          formHtml += `
+            <label class="input-label">Provide your Gemini API Key</label>
+            <input type="text" name="google_gemini_api_key" placeholder="Gemini API Key" class="horoscope-input" required>
+           <p class="help-text" style="text-align:center; font-size: 0.9em; color: gray; margin-top: 6px;">
+              For Gemini API key visit 
+              <a href="https://aistudio.google.com/app/apikey" target="_blank">https://aistudio.google.com/app/apikey</a>
+            </p>
+          `;
+        }
+
+        if (data.missing.includes("zodiac_sign")) {
+          const options = ["aries","taurus","gemini","cancer","leo","virgo","libra","scorpio","sagittarius","capricorn","aquarius","pisces"];
+          formHtml += `
+            <label class="input-label">Provide your Zodiac Sign</label>
+            <select name="zodiac_sign" class="horoscope-select" required>
+              <option value="">-- Select Zodiac --</option>
+              ${options.map(o => `<option value="${o}">${o.charAt(0).toUpperCase() + o.slice(1) }</option>`).join("")}
+            </select>
+          `;
+        }
+
+        formHtml += `<button type="submit" class="horoscope-btn">Save</button></form>`;
+        content.innerHTML = formHtml;
+
+        document.getElementById("horoscopeForm").addEventListener("submit", async function(ev) {
+          ev.preventDefault();
+          const formData = new FormData(this);
+          let payload = {};
+          for (let [k, v] of formData.entries()) payload[k] = v;
+
+          await fetch("/horoscope", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+          });
+          location.reload();
+        });
+      } else if (data.horoscope) {
+        content.innerHTML = `
+          <div class="popup-header">
+            <h2 class="popup-title">🔮 Horoscope for ${data.zodiac}</h2>
+          </div>
+          <p class="popup-text">${data.horoscope}</p>
+        `;
+      } else {
+        content.innerHTML = `
+          <div class="popup-header">
+            <h3 class="popup-heading">⚠️ Error</h3>
+          </div>
+          <p>⚠️ Error fetching horoscope.</p>
+        `;
+      }
+        document.getElementById("closeHoroscopePopup").addEventListener("click", function() {
+        document.getElementById("horoscopePopup").classList.add("hidden");
+      });
+    });
+
+
+    const sidebar = document.getElementById("sidebar");
+    const sidebarToggle = document.getElementById("sidebarToggle");
+    const closeSidebar = document.getElementById("closeSidebar");
+
+    sidebarToggle.addEventListener("click", () => {
+      sidebar.classList.add("show");
+      sidebarToggle.classList.add("hidden"); 
+    });
+
+    closeSidebar.addEventListener("click", () => {
+      sidebar.classList.remove("show");
+      sidebarToggle.classList.remove("hidden"); 
+    });
+
+    const popup = document.getElementById("sidebarFieldPopup");
+    const closePopup = document.getElementById("sidebarClosePopup");
+    const popupTitle = document.getElementById("sidebarPopupTitle");
+    const popupBody = document.getElementById("sidebarPopupBody");
+
+    closePopup.addEventListener("click", () => popup.classList.add("hidden"));
+
+    document.querySelectorAll(".field-btn").forEach(btn => {
+      btn.addEventListener("click", async () => {
+        const field = btn.dataset.field;
+        const res = await fetch(`/get_user_field/${field}`);
+        const data = await res.json();
+
+        popup.classList.remove("hidden");
+        popupTitle.textContent = `Change your ${btn.textContent}`;
+
+        if (!data[field]) {
+          popupBody.innerHTML = `<p>You have not provided information yet.</p>`;
+          return;
+        }
+        let inputHTML = "";
+        if (field === "client_secret_json") {
+          inputHTML = `<textarea id="fieldInput" rows="6" style="width:100%">${data[field]}</textarea>`;
+        } else if (field === "zodiac_sign") {
+          const options = ["aries","taurus","gemini","cancer","leo","virgo","libra","scorpio","sagittarius","capricorn","aquarius","pisces"];
+          inputHTML = `<select id="fieldInput">${options.map(o=>`<option value="${o}" ${o===data[field]?"selected":""}>${o}</option>`).join("")}</select>`;
+        } else {
+          inputHTML = `<input id="fieldInput" type="text" value="${data[field]||""}" style="width:100%">`;
+        }
+
+        popupBody.innerHTML = `
+          ${inputHTML}
+          <button id="submitField" class="field-btn" style="margin-top:10px">Submit</button>
+        `;
+
+        document.getElementById("submitField").addEventListener("click", async () => {
+          const value = document.getElementById("fieldInput").value;
+          await fetch(`/update_user_field/${field}`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ value })
+          });
+          alert("Updated successfully!");
+          popup.classList.add("hidden");
+        });
+      });
+    });
+
+  </script>
+{% endblock %}

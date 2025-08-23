@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="max-w-md mx-auto mt-12 bg-white shadow p-6 rounded-xl">
+  <h2 class="text-xl font-bold mb-4">🔑 Setup News API Key</h2>
+  <form method="POST" action="{{ url_for('setup_news_api') }}">
+    <label class="block mb-2">News API Key</label>
+    <input type="text" name="news_api" class="w-full border p-2 rounded mb-4" placeholder="Enter your News API Key" required>
+    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded w-full">Save Key</button>
+    <p class="text-center text-gray-600 text-sm mt-3">
+      For News API key visit 
+      <a href="https://mediastack.com/sources/india-news-api" target="_blank" class="text-blue-600 underline">
+        https://mediastack.com/sources/india-news-api
+      </a>
+    </p>
+  </form>
+</div>
+{% endblock %}

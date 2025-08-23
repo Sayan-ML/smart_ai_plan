@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Stocks Insights</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to bottom right, #6a11cb, #2575fc);
+      color: #fff;
+      text-align: center;
+    }
+
+    .stocks-container {
+      margin: 0 auto;
+      padding: 0 20px;
+      max-width: 1200px;
+    }
+
+    .stocks-header h2 {
+      font-size: 42px; 
+      margin-top: 20px;
+    }
+
+    .stocks-buttons {
+      margin: 20px 0;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .stock-btn {
+      padding: 10px 18px;
+      margin: 6px;
+      border: none;
+      border-radius: 8px;
+      background-color: #2d2f88;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .stock-btn:hover { background-color: #1e2066; }
+    .stock-btn.active { background-color: #0f154d; }
+
+    .metrics-row {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin: 20px 0;
+    }
+
+    .metric-card {
+      flex: 1;
+      min-width: 200px;
+      background: linear-gradient(to bottom, #3a3a5c, #1e1e2f); /* gradient top→bottom */
+      color: #fff;
+      padding: 15px;
+      margin: 10px;
+      border-radius: 12px;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+
+    .metric-card h4 { 
+      font-size: 20px;  
+      margin-bottom: 8px; 
+    }
+
+    .metric-card p { 
+      font-size: 22px;   
+      font-weight: bold; 
+    }
+
+    .chart-container {
+      background: #fff;
+      padding: 20px; 
+      border-radius: 12px;
+      border: 2px solid #ccc; 
+      margin: 20px auto;
+      max-width: 1000px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+
+    .ai-advice {
+      background-color: #1e1e2f;
+      padding: 20px;
+      margin: 20px auto;
+      border-radius: 12px;
+      max-width: 800px;
+      text-align: left;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      display: none;
+    }
+
+    .ai-advice h3 { color: #ffcc00; }
+    .ai-advice strong { color: #4cafef; font-size: 20px; }
+    .ai-advice ul { margin-top: 10px; padding-left: 20px; }
+  </style>
+</head>
+<body>
+  <div class="stocks-container">
+    <div class="stocks-header">
+      <h2>📊 Stocks Insights</h2>
+      <p>Track stock trends and get AI-powered investment advice in real time.</p>
+    </div>
+
+    <div class="stocks-buttons">
+      <button class="stock-btn" onclick="loadStock('AAPL', event)">Apple (AAPL)</button>
+      <button class="stock-btn" onclick="loadStock('TSLA', event)">Tesla (TSLA)</button>
+      <button class="stock-btn" onclick="loadStock('NFLX', event)">Netflix (NFLX)</button>
+      <button class="stock-btn" onclick="loadStock('MSFT', event)">Microsoft (MSFT)</button>
+      <button class="stock-btn" onclick="loadStock('AMZN', event)">Amazon (AMZN)</button>
+      <button class="stock-btn" onclick="loadStock('GOOGL', event)">Google (GOOGL)</button>
+    </div>
+
+    <div class="metrics-row" id="metricsRow">
+      <div class="metric-card">
+        <h4>Last Price</h4>
+        <p id="lastPrice">--</p>
+      </div>
+      <div class="metric-card">
+        <h4>30d % Change</h4>
+        <p id="pctChange">--</p>
+      </div>
+      <div class="metric-card">
+        <h4>Highest (30d)</h4>
+        <p id="highest">--</p>
+      </div>
+      <div class="metric-card">
+        <h4>Lowest (30d)</h4>
+        <p id="lowest">--</p>
+      </div>
+    </div>
+
+    <div class="chart-container">
+      <canvas id="stockChart" width="950" height="480"></canvas>
+    </div>
+
+    <div class="ai-advice" id="aiAdvice">
+      <h3>🔮 AI Stock Advice</h3>
+      <p><strong id="decision">--</strong></p>
+      <ul id="reasons"></ul>
+    </div>
+  </div>
+
+  <script>
+    let chart;
+    async function loadStock(symbol, e) {
+      document.querySelectorAll('.stock-btn').forEach(btn => btn.classList.remove('active'));
+      if (e && e.target) e.target.classList.add('active');
+
+      const res = await fetch('/api/stocks', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ symbol })
+      });
+      const data = await res.json();
+      if (!res.ok || data.error) {
+        alert(data.error || 'Failed to load stock data');
+        return;
+      }
+
+      document.getElementById('lastPrice').innerText = `$${Number(data.last_price).toFixed(2)}`;
+      document.getElementById('pctChange').innerText = `${Number(data.pct_change).toFixed(2)}%`;
+      document.getElementById('highest').innerText = `$${Number(data.highest).toFixed(2)}`;
+      document.getElementById('lowest').innerText = `$${Number(data.lowest).toFixed(2)}`;
+
+      const labels = data.history.map(d => d.Date);
+      const prices = data.history.map(d => d.Close);
+
+      if (chart) chart.destroy();
+      const ctx = document.getElementById('stockChart').getContext('2d');
+      chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: data.symbol + ' Stock Price (30d)',
+            data: prices,
+            borderColor: '#2196f3',
+            backgroundColor: '#2196f3',
+            fill: false,
+            pointRadius: 6,
+            pointHoverRadius: 8,
+            pointBackgroundColor: '#ff5722'
+          }]
+        },
+        options: {
+          responsive: true,
+          interaction: {
+            mode: 'nearest',
+            intersect: true
+          },
+          plugins: {
+            title: {
+              display: true,
+              text: data.symbol + ' Stock Performance (30 Days)',
+              font: {
+                size: 22,  
+                weight: 'bold'
+              }
+            },
+            tooltip: {
+              enabled: true,
+              callbacks: {
+                label: function(ctx) {
+                  return `$${ctx.raw.toFixed(2)}`;
+                }
+              }
+            }
+          },
+          scales: {
+            x: { display: false },
+            y: { beginAtZero: false }
+          }
+        }
+      });
+
+      const parsed = parseAdvice(data.advice);
+      document.getElementById('aiAdvice').style.display = 'block';
+      document.getElementById('decision').innerText = parsed.decision;
+      const list = document.getElementById('reasons');
+      list.innerHTML = '';
+      parsed.reasons.forEach(r => {
+        const li = document.createElement('li');
+        li.textContent = r;
+        list.appendChild(li);
+      });
+    }
+
+    function parseAdvice(text) {
+      if (!text) return { decision: 'No Decision', reasons: [] };
+
+      let cleaned = text.replace(/\*\*/g, '').trim();
+      const lines = cleaned.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+
+      const opts = ['strong buy', 'buy', 'hold', 'sell', 'strong sell'];
+      let decision = 'No Decision';
+      for (let l of lines) {
+        const hit = opts.find(o => l.toLowerCase().includes(o));
+        if (hit) {
+          decision = hit.split(" ").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
+          break;
+        }
+      }
+      let reasons = [];
+      for (let l of lines) {
+        const match = l.match(/^Reason\s*\d+\s*:\s*(.*)$/i);
+        if (match) {
+          reasons.push(match[1].trim());
+        }
+      }
+
+      reasons = reasons.slice(0, 3);
+      return { decision, reasons };
+    }
+
+    function capitalize(s) {
+      return s.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+    }
+  </script>
+</body>
+</html>

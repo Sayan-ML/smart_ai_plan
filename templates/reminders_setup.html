@@ -1,0 +1,44 @@
+{% extends "dashboard_base.html" %}
+{% block content %}
+<div class="container">
+  <h2>🔑 Connect Google Calendar</h2>
+  <p>Paste your <b>Google Client Secret JSON</b> here:</p>
+
+  <form method="POST">
+    {% if not client_secret %}
+      <label>Google Client Secret JSON</label>
+      <textarea name="client_secret_json" placeholder="Paste JSON content here" rows="6" required></textarea>
+    {% endif %}
+
+    <button type="submit">Save & Continue</button>
+  </form>
+
+  <div style="margin-top:20px; font-size:14px; color:#333; line-height:1.6;">
+    <p>
+      🔑 For Google Client Secret JSON (OAuth client ID): 
+      <a href="https://console.cloud.google.com/apis/dashboard?project=famous-segment-469708-t5" target="_blank" style="color:#1d4ed8; text-decoration:underline;">
+        https://console.cloud.google.com/apis/dashboard?project=famous-segment-469708-t5
+      </a>
+    </p>
+  </div>
+  
+  <h3 style="margin-top:20px; font-weight:bold; text-align:center;">✅ Enable</h3>
+  <div style="display:flex; justify-content:space-between; margin-top:10px; text-align:center;">
+    <a href="https://console.cloud.google.com/apis/library/gmail.googleapis.com?project=famous-segment-469708-t5" 
+      target="_blank" 
+      style="flex:1; margin:0 5px; padding:10px; border:1px solid #ddd; border-radius:8px; background:#f9fafb; color:#1d4ed8; text-decoration:none; font-weight:500;">
+      Gmail API
+    </a>
+    <a href="https://console.cloud.google.com/apis/library/calendar-json.googleapis.com?project=famous-segment-469708-t5" 
+      target="_blank" 
+      style="flex:1; margin:0 5px; padding:10px; border:1px solid #ddd; border-radius:8px; background:#f9fafb; color:#1d4ed8; text-decoration:none; font-weight:500;">
+      Calendar API
+    </a>
+    <a href="https://console.cloud.google.com/auth/audience?project=famous-segment-469708-t5" 
+      target="_blank" 
+      style="flex:1; margin:0 5px; padding:10px; border:1px solid #ddd; border-radius:8px; background:#f9fafb; color:#1d4ed8; text-decoration:none; font-weight:500;">
+      Add Users
+    </a>
+  </div>
+</div>
+{% endblock %}
