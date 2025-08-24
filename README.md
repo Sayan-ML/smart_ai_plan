@@ -66,7 +66,14 @@ See the LICENSE
 ## 👨‍💻 Developers  
 
 This backend system was collaboratively developed by:  
-- [Sayan Banerjee](https://github.com/your-github-username)  
-- [Sujil S](https://github.com/sujil-github-username)  
+
+- **Sayan Banerjee**  
+  [![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Sayan-ML)
+  [![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/sayan-banerjee-0222a4214/)/)  
+
+- **Sujil S**  
+  [![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)]([https://github.com/sujil-github-username](https://github.com/Error-Makes-Clever))  
+  [![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/sujil-s/)
+
 
 
