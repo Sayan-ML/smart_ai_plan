@@ -114,6 +114,28 @@ This project is licensed under the MIT License – you are free to use, modify, 
 See the LICENSE
  file for details.
 
+---
+
+## 🌍 Future Improvements  
+
+- Voice assistant integration (speak commands).  
+- Mobile app version with Flutter.  
+- Multi-language support.  
+- Push notifications for reminders.  
+- AI-driven personalized daily schedule generation.  
+
+---
+
+## 🤝 Contributing  
+
+Contributions are welcome! 🎉  
+
+1. Fork the repo  
+2. Create a new branch (`feature-xyz`)  
+3. Commit your changes  
+4. Push the branch and create a Pull Request  
+
+---
 
 
   ## 👨‍💻 Developers  
@@ -124,6 +146,15 @@ This backend system was collaboratively developed by:
 |-----------|----------|
 | **Sayan Banerjee** | [![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Sayan-ML) [![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/sayan-banerjee-0222a4214/) |
 | **Sujil S** | [![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Error-Makes-Clever) [![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/sujil-s/)
+
+## ⭐ Show Your Support  
+
+If you found this project useful, don’t forget to ⭐ the repository!  
+
+
+
+
+
 
 
 
