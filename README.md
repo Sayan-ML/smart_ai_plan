@@ -81,7 +81,7 @@ It balances **work needs** (reminders, email, finance, news) with **personal nee
 ## 🛠️ Tech Stack  
 
 - **Frontend**: HTML, CSS, Flask  
-- **Backend** : Python ,Gemini LLM , Multiple APIs 
+- **Backend** : Python ,Gemini LLM , Multiple APIs , Supabase(PostgreSQL)
 - **APIs & Services**:  
   - Weather API 🌤️  
   - News API 📰  
