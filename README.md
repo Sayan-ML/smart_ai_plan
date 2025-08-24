@@ -49,9 +49,10 @@ Deployed live using **Render** 🌐 with a beautiful frontend and a powerful Fas
 
 ## 📸 Screenshots  
 
-| Homepage | Planner Dashboard | Movie Recommender |
-|----------|------------------|------------------|
-| ![Homepage](Screenshot (547).png) | ![Planner](assets/dashboard.png) | ![Movies](assets/movies.png) |
+| Login Page | Home Screen | Movie Recommender | Travel Planner |
+|------------|-------------|-------------------|----------------|
+| ![Login](assets/login.png) | ![Home](assets/home.png) | ![Movies](assets/movies.png) | ![Travel](assets/travel.png) |
+
 
 
 ---
