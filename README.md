@@ -51,7 +51,8 @@ Deployed live using **Render** 🌐 with a beautiful frontend and a powerful Fas
 
 | Homepage | Planner Dashboard | Movie Recommender |
 |----------|------------------|------------------|
-| ![Homepage](assets/homepage.png) | ![Planner](assets/dashboard.png) | ![Movies](assets/movies.png) |
+| ![Homepage](Screenshot (547).png) | ![Planner](assets/dashboard.png) | ![Movies](assets/movies.png) |
+
 
 ---
 
