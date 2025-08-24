@@ -1,5 +1,16 @@
 # 🌟 Smart AI Daily Planner  
 
+![Python](https://img.shields.io/badge/Python-3.10%2B-blue?logo=python&logoColor=white)  
+![Flask](https://img.shields.io/badge/Flask-Backend-lightgrey?logo=flask&logoColor=black)  
+![Postgres](https://img.shields.io/badge/PostgreSQL-Supabase-336791?logo=postgresql&logoColor=white)  
+![API](https://img.shields.io/badge/Multiple%20APIs-Integrated-orange)  
+![LLM](https://img.shields.io/badge/AI-Gemini%20LLM-red)  
+![License](https://img.shields.io/badge/License-MIT-green)  
+![Status](https://img.shields.io/badge/Status-Active-brightgreen)  
+![Contributions](https://img.shields.io/badge/Contributions-Welcome-yellow)  
+
+---
+
 A collaborative project by **Sayan Banerjee** and **Sujil S** 🚀  
 
 The **Smart AI Daily Planner** is an all-in-one **AI-powered personal productivity assistant** that combines task management, real-time updates, and intelligent recommendations in a single platform.  
