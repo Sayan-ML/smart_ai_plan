@@ -2,28 +2,79 @@
 
 A collaborative project by **Sayan Banerjee** and **Sujil S** 🚀  
 
-The **Smart AI Daily Planner** is your all-in-one **AI-powered personal assistant** designed to make daily life seamless and organized. It integrates **productivity tools, real-time updates, and intelligent recommendations** into a single web application — helping users save time and stay informed.  
+The **Smart AI Daily Planner** is an all-in-one **AI-powered personal productivity assistant** that combines task management, real-time updates, and intelligent recommendations in a single platform.  
 
-Deployed on local system 🌐 with a beautiful frontend and a powerful flask backend ⚡.  
+Instead of juggling multiple apps for **weather, finance, news, reminders, expenses, and entertainment**, this project integrates them all into one **seamless web application**.  
+The planner is designed for busy individuals who want to:  
+- **Save time** by consolidating daily utilities into one place.  
+- **Stay informed** with real-time updates.  
+- **Boost productivity** with automated scheduling and reminders.  
+- **Personalize experiences** with AI-driven recommendations.  
+
+Deployed on a local system 🌐 with a **beautiful frontend** and a **powerful Flask backend** ⚡.  
 
 ---
 
 ## ✨ Features  
 
 ### 📅 Productivity & Organization  
-- **Google Reminders & To-Do List** → Create, manage, and track your daily tasks effortlessly.  
-- **Email Assistant** → Read and send personalized emails directly from the app.  
+- **Google Reminders & To-Do List**  
+  - Create, edit, and delete tasks with due dates.  
+  - Syncs seamlessly with Google Tasks API for cross-device management.  
+  - Stay on top of deadlines with a clean, minimal UI.  
 
-### 📊 Live Updates  
-- **Weather** → Get current and forecasted weather conditions.  
-- **Stock & Crypto** → Stay updated with market trends in real time.  
-- **Daily News Headlines** → Latest updates plus a summary of the previous day.  
+- **Email Assistant**  
+  - Read, summarize, and send personalized emails.  
+  - Smart email drafting using Gemini LLM for professional communication.  
+  - Reduces time spent writing repetitive responses.  
+
+---
+
+### 📊 Live Updates & Insights  
+- **Weather**  
+  - Get real-time weather updates and multi-day forecasts.  
+  - Displays temperature, humidity, and conditions with a user-friendly UI.  
+
+- **Stock & Crypto Updates**  
+  - Live financial data for stock market and crypto trends.  
+  - Visual graphs and insights to quickly understand price movements.  
+  - Perfect for professionals who track investments daily.  
+
+- **Daily News Headlines**  
+  - Aggregates top headlines across categories (politics, tech, sports, etc.).  
+  - Provides **yesterday’s summary** with LLM-based text summarization.  
+  - Saves time by cutting through information overload.  
+
+---
 
 ### 🔮 Lifestyle & Personalization  
-- **Horoscope** → Daily horoscope tailored to your sign.  
-- **Expense Tracker** → Simple tool to record and monitor expenses.  
-- **Movie Recommendation System** → AI-based suggestions for your next movie night.  
-- **Travel Planner** → Discover nearby places and travel ideas.  
+- **Horoscope**  
+  - Daily zodiac-based horoscope tailored to the user’s sign.  
+  - Lightweight but fun feature to keep the app engaging.  
+
+- **Expense Tracker**  
+  - Simple yet powerful tool to log daily expenses.  
+  - Categorization of spending (food, travel, bills, etc.).  
+  - Helps maintain financial discipline and budgeting.  
+
+- **Movie Recommendation System**  
+  - AI-powered movie suggestions based on user sentiment and past preferences.  
+  - Built with **custom ML logic** for personalization.  
+  - Makes weekend or leisure planning easier.  
+
+- **Travel Planner**  
+  - Suggests nearby destinations based on user location.  
+  - Integrates with mapping services to display travel ideas.  
+  - Ideal for quick weekend getaways or local exploration.  
+
+---
+
+💡 **Why this project stands out**:  
+Unlike typical planners, this is not just a **calendar app** — it’s a **smart assistant** that blends productivity, finance, lifestyle, and entertainment into one unified dashboard.  
+It balances **work needs** (reminders, email, finance, news) with **personal needs** (movies, travel, horoscope, expenses).  
+
+---
+
 
 ---
 
