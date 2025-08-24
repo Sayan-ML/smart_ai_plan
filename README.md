@@ -17,7 +17,6 @@ Deployed live using **Render** 🌐 with a beautiful frontend and a powerful Fas
 ### 📊 Live Updates  
 - **Weather** → Get current and forecasted weather conditions.  
 - **Stock & Crypto** → Stay updated with market trends in real time.  
-- **Sports Reports** → Customized match reports and scores based on user preferences.  
 - **Daily News Headlines** → Latest updates plus a summary of the previous day.  
 
 ### 🔮 Lifestyle & Personalization  
@@ -30,9 +29,8 @@ Deployed live using **Render** 🌐 with a beautiful frontend and a powerful Fas
 
 ## 🛠️ Tech Stack  
 
-- **Backend**: [FastAPI](https://fastapi.tiangolo.com/) (high-performance Python framework)  
-- **Frontend**: HTML, CSS, JavaScript (responsive, user-friendly design)  
-- **Deployment**: [Render](https://render.com/) (for reliable hosting)  
+- **Frontend**: HTML, CSS, Flask  
+- **Backend** : Python ,Gemini LLM , Multiple APIs 
 - **APIs & Services**:  
   - Weather API 🌤️  
   - News API 📰  
@@ -44,8 +42,8 @@ Deployed live using **Render** 🌐 with a beautiful frontend and a powerful Fas
 
 ## 🚀 Live Demo  
 
-📹 **Video Walkthrough:** [Add Your Demo Video Link]  
-🌍 **Hosted App on Render:** [Add Your Render Deployment Link]  
+📹 **Video Walkthrough:** [[Add Your Demo Video Link](https://drive.google.com/file/d/1cXeE-yiACutR84K9yrXqRja6Cml2YNmj/view?usp=sharing)]  
+  
 
 ---
 
