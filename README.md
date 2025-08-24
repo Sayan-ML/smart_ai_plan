@@ -4,7 +4,7 @@ A collaborative project by **Sayan Banerjee** and **Sujil S** 🚀
 
 The **Smart AI Daily Planner** is your all-in-one **AI-powered personal assistant** designed to make daily life seamless and organized. It integrates **productivity tools, real-time updates, and intelligent recommendations** into a single web application — helping users save time and stay informed.  
 
-Deployed live using **Render** 🌐 with a beautiful frontend and a powerful FastAPI backend ⚡.  
+Deployed on local system 🌐 with a beautiful frontend and a powerful flask backend ⚡.  
 
 ---
 
