@@ -49,8 +49,8 @@ Deployed live using **Render** 🌐 with a beautiful frontend and a powerful Fas
 
 ## 📸 Screenshots  
 
-| Homepage | Planner Dashboard | Movie Recommender |
-|----------|------------------|------------------|
+|Login Page|| Homepage | Planner Dashboard | Movie Recommender |
+|-----------||----------|------------------|------------------|
 | ![Homepage](assets/homepage.png) | ![Planner](assets/dashboard.png) | ![Movies](assets/movies.png) |
 
 ---
