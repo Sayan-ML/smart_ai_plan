@@ -42,7 +42,7 @@ Deployed on local system 🌐 with a beautiful frontend and a powerful flask bac
 
 ## 🚀 Live Demo  
 
-📹 **Video Walkthrough:** [Demo](https://drive.google.com/file/d/1cXeE-yiACutR84K9yrXqRja6Cml2YNmj/view?usp=sharing)]  
+📹 **Video Walkthrough:** [Demo](https://drive.google.com/file/d/1cXeE-yiACutR84K9yrXqRja6Cml2YNmj/view?usp=sharing)
   
 
 ---
