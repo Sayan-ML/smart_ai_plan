@@ -42,7 +42,7 @@ Deployed live using **Render** 🌐 with a beautiful frontend and a powerful Fas
 
 ## 🚀 Live Demo  
 
-📹 **Video Walkthrough:** [[Add Your Demo Video Link](https://drive.google.com/file/d/1cXeE-yiACutR84K9yrXqRja6Cml2YNmj/view?usp=sharing)]  
+📹 **Video Walkthrough:** [Demo](https://drive.google.com/file/d/1cXeE-yiACutR84K9yrXqRja6Cml2YNmj/view?usp=sharing)]  
   
 
 ---
